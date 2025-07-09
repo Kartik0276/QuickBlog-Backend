@@ -20,8 +20,21 @@ try {
 const PORT = process.env.PORT || 5000;
 
 // Middlewares
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://quick-blog-frontend-qm0gr8l7x-kartik-maitys-projects.vercel.app',
+  'https://quick-blog-frontend-qm0gr8l7x-kartik-maitys-projects.vercel.app/',
+  // Add more domains as needed
+];
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000'],
+  origin: function (origin, callback) {
+    console.log('CORS request from origin:', origin);
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json());
